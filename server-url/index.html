@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>SummerML evaluator</title></head>
+<body style="font:16px system-ui;max-width:680px;margin:60px auto;padding:0 20px;color:#151515">
+  <h1>SummerML evaluator endpoint</h1>
+  <p id="state">Checking…</p>
+  <script>
+    fetch("current.txt?t=" + Date.now(), {cache: "no-store"}).then(r => r.text()).then(value => {
+      const url = value.trim();
+      document.getElementById("state").textContent = url ? `Online at ${url}` : "The evaluator is sleeping.";
+    }).catch(() => { document.getElementById("state").textContent = "Endpoint unavailable."; });
+  </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Seven paper reproduction challenges for TUES machine-learning students.">
+  <title>SummerML — Recreate the papers</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./">SummerML</a>
+    <nav aria-label="Primary navigation">
+      <a href="#challenges">Challenges</a>
+      <a href="#progress">Progress</a>
+      <a href="https://github.com/TUES-AI/SummerML">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="eyebrow">TUES AI · Paper reproduction challenge</p>
+      <h1 id="hero-title">Read the paper.<br>Rebuild the idea.</h1>
+      <p class="hero-copy">Seven small, faithful implementations across images, sensor sequences, tabular data, and language. Passing means understanding the model—not importing it.</p>
+      <div class="identity" id="progress">
+        <label for="student-name">Leaderboard name</label>
+        <div class="identity-row">
+          <input id="student-name" maxlength="40" placeholder="your-name" autocomplete="nickname">
+          <button id="load-progress" type="button">Load progress</button>
+        </div>
+        <p class="hint">Use the exact same name when submitting.</p>
+      </div>
+    </section>
+
+    <section class="status-strip" aria-live="polite">
+      <span id="status-dot" class="status-dot"></span>
+      <span id="backend-status">Checking evaluator…</span>
+      <span id="progress-summary" class="progress-summary"></span>
+    </section>
+
+    <section id="challenges" class="challenge-section" aria-labelledby="challenge-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Curriculum</p>
+          <h2 id="challenge-title">Three levels, seven papers</h2>
+        </div>
+        <p>Pass 2 of 3 Level 1 challenges to unlock Level 2. Pass 1 of 2 Level 2 challenges to unlock Level 3.</p>
+      </div>
+      <div id="levels"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>SummerML · TUES AI</p>
+    <p>Scores come from organizer-held evaluation data. Published paper results are context, not leaderboard values.</p>
+  </footer>
+</body>
+</html>
