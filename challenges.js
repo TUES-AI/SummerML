@@ -65,12 +65,12 @@ window.SUMMERML_CHALLENGES = [
 ];
 
 window.SUMMERML_UI = {
-  "lenet5-mnist": {path: "level1/LeNet5/", color: "#7c3aed", soft: "#f3e8ff"},
-  "resnet1d-forda": {path: "level1/1DResNet/", color: "#0284c7", soft: "#e0f2fe"},
-  "mlp-higgs": {path: "level1/HIGGS-MLP/", color: "#ea580c", soft: "#ffedd5"},
-  "lstm-sequential-mnist": {path: "level2/Sequential-MNIST/", color: "#db2777", soft: "#fce7f3"},
-  "nin-cifar100": {path: "level2/Network-in-Network/", color: "#059669", soft: "#d1fae5"},
-  "alexnet-tiny-imagenet": {path: "level3/Scaled-AlexNet/", color: "#dc2626", soft: "#fee2e2"},
-  "lstm-ptb": {path: "level3/PTB-LSTM/", color: "#4f46e5", soft: "#e0e7ff"},
+  "lenet5-mnist": {path: "level1/LeNet5/", color: "#5b4a7a", soft: "#f4f2f7"},
+  "resnet1d-forda": {path: "level1/1DResNet/", color: "#315a72", soft: "#f0f4f6"},
+  "mlp-higgs": {path: "level1/HIGGS-MLP/", color: "#76543d", soft: "#f6f3f0"},
+  "lstm-sequential-mnist": {path: "level2/Sequential-MNIST/", color: "#71495d", soft: "#f6f2f4"},
+  "nin-cifar100": {path: "level2/Network-in-Network/", color: "#3f6457", soft: "#f1f5f3"},
+  "alexnet-tiny-imagenet": {path: "level3/Scaled-AlexNet/", color: "#754848", soft: "#f6f2f2"},
+  "lstm-ptb": {path: "level3/PTB-LSTM/", color: "#4c5578", soft: "#f1f2f6"},
 };
 

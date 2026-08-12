@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Seven paper reproduction challenges for TUES machine-learning students.">
   <title>SummerML — Recreate the papers</title>
+  <link rel="icon" type="image/png" href="assets/favicon-tues.png">
   <link rel="stylesheet" href="styles.css">
   <script src="challenges.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="./">SummerML</a>
+    <a class="brand" href="./"><img src="assets/favicon-tues.png" alt="">SummerML</a>
     <nav aria-label="Primary navigation">
       <a href="#challenges">Challenges</a>
       <a href="#progress">Progress</a>
@@ -22,8 +23,16 @@
   <main>
     <section class="hero" aria-labelledby="hero-title">
       <p class="eyebrow">TUES AI · Paper reproduction challenge</p>
-      <h1 id="hero-title">Read the <span class="hero-violet">paper.</span><br>Rebuild the <span class="hero-blue">idea.</span></h1>
-      <p class="hero-copy">Seven small, faithful implementations across images, sensor sequences, tabular data, and language. Passing means understanding the model—not importing it.</p>
+      <div class="hero-heading">
+        <div>
+          <h1 id="hero-title">Read the paper.<br>Rebuild the idea.</h1>
+          <p class="hero-copy">Seven small, faithful implementations across images, sensor sequences, tabular data, and language. Passing means understanding the model—not importing it.</p>
+        </div>
+        <figure class="tues-logo-lockup">
+          <img src="assets/tues-ai-logo.png" alt="TUES AI logo">
+          <figcaption>TUES AI</figcaption>
+        </figure>
+      </div>
       <div class="identity" id="progress">
         <label for="student-name">Leaderboard name</label>
         <div class="identity-row">
