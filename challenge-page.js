@@ -25,19 +25,6 @@ function formatScore(value) {
   return `${(Number(value) * 100).toFixed(2)}%`;
 }
 
-function stableHue(name) {
-  let hash = 0;
-  for (const char of name) hash = ((hash << 5) - hash + char.charCodeAt(0)) | 0;
-  return Math.abs(hash) % 360;
-}
-
-function scoreWidth(value, rows) {
-  if (challenge.metric !== "perplexity") return Math.max(4, Math.min(100, Number(value) * 100));
-  const values = rows.map(row => Number(row.value));
-  const best = Math.min(...values), worst = Math.max(...values);
-  return worst === best ? 100 : 35 + ((worst - Number(value)) / (worst - best)) * 65;
-}
-
 function referenceHtml() {
   const refs = payload?.challenges?.[challengeId]?.references || {};
   const definitions = [
@@ -47,9 +34,10 @@ function referenceHtml() {
   ];
   return definitions.map(([key, title, description]) => {
     const row = refs[key] || {};
-    return `<div class="reference-card reference-${key}">
-      <span class="reference-dot"></span><span class="reference-kicker">${escapeHtml(title)}</span>
-      <strong>${formatScore(row.value)}</strong><small>${escapeHtml(description)}</small>
+    return `<div class="reference-item reference-${key}">
+      <span class="reference-kicker">${escapeHtml(title)}</span>
+      <strong>${formatScore(row.value)}</strong>
+      <small>${escapeHtml(description)}</small>
     </div>`;
   }).join("");
 }
@@ -63,18 +51,13 @@ function leaderboardHtml() {
   if (!rows.length) return `<div class="empty-board">${online ? "No submissions yet. Be the first." : "Start the evaluator to see live scores."}</div>`;
   return `<div class="scoreboard">${rows.slice(0, 20).map((row, index) => {
     const rank = row.rank || index + 1;
-    const hue = stableHue(row.name);
-    const width = scoreWidth(row.value, rows);
     const rankClass = rank <= 3 ? ` rank-${rank}` : "";
     const runs = row.runs?.length ? `<details class="run-history"><summary>${row.run_count} runs</summary>${row.runs.map(runHtml).join("")}</details>` : `<span class="single-run">1 run</span>`;
     return `<article class="score-row${rankClass}">
-      <div class="rank-badge">${rank <= 3 ? ["🥇","🥈","🥉"][rank - 1] : `#${rank}`}</div>
-      <div class="student-avatar" style="--hue:${hue}">${escapeHtml(row.name.slice(0, 1).toUpperCase())}</div>
-      <div class="student-score">
-        <div class="student-line"><strong>${escapeHtml(row.name)}</strong><span>${formatScore(row.value)}</span></div>
-        <div class="score-track"><span style="width:${width.toFixed(2)}%; --hue:${hue}"></span></div>
-      </div>
-      <div class="runs-cell">${runs}</div>
+      <span class="rank-badge">${rank <= 3 ? ["🥇","🥈","🥉"][rank - 1] : `#${rank}`}</span>
+      <strong class="student-name">${escapeHtml(row.name)}</strong>
+      <strong class="score-value">${formatScore(row.value)}</strong>
+      <span class="runs-cell">${runs}</span>
     </article>`;
   }).join("")}</div>`;
 }
@@ -114,7 +97,7 @@ function render() {
       <article class="code-section"><div class="code-heading"><span>02</span><h2>Submit your model</h2></div><div class="code-frame"><button class="copy-button" type="button">Copy</button><pre><code class="language-python">${escapeHtml(challenge.submit)}</code></pre></div></article>
     </section>
 
-    <section class="references"><div class="section-title"><div><p class="eyebrow">Targets</p><h2>Three reference points</h2></div><p>Every reference is evaluated on the same hidden protocol as student submissions.</p></div><div class="reference-cards">${referenceHtml()}</div></section>
+    <section class="references"><div class="section-title"><div><p class="eyebrow">Targets</p><h2>Three reference points</h2></div><p>Every reference is evaluated on the same hidden protocol as student submissions.</p></div><div class="reference-list">${referenceHtml()}</div></section>
 
     <section class="leaderboard"><div class="section-title"><div><p class="eyebrow">Live standings</p><h2>${escapeHtml(challenge.short)} leaderboard</h2></div><span class="metric-pill">${challenge.metric === "perplexity" ? "Lower is better" : "Higher is better"}</span></div>${leaderboardHtml()}</section>
 
