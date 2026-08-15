@@ -17,7 +17,7 @@ CHALLENGES = (
     "lstm-sequential-mnist",
     "nin-cifar100",
     "alexnet-tiny-imagenet",
-    "lstm-ptb",
+    "bert-mini-sst2",
 )
 MAX_FILE_BYTES = 100 * 1024 * 1024
 EXPECTED_ARCHITECTURES = {
@@ -27,7 +27,7 @@ EXPECTED_ARCHITECTURES = {
     "lstm-sequential-mnist": "lstm",
     "nin-cifar100": "nin",
     "alexnet-tiny-imagenet": "scaled-alexnet",
-    "lstm-ptb": "zaremba-small",
+    "bert-mini-sst2": "bert-mini-uncased",
 }
 
 
@@ -66,8 +66,6 @@ def resolve_server_url(direct_url: str, broker_url: str) -> str:
 def score_text(score: dict[str, Any]) -> str:
     metric = score.get("metric")
     value = score.get("value")
-    if metric == "perplexity":
-        return f"perplexity={value:.3f}"
     if metric == "roc_auc":
         return f"ROC-AUC={value:.5f}"
     if metric == "accuracy":

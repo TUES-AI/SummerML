@@ -16,7 +16,7 @@ The papers are the specification. Each challenge provides only a concise dataset
 | 2 | [LSTM on sequential MNIST](level2/Sequential-MNIST/) | Long sequence | Pass either Level 2 challenge |
 | 2 | [Network in Network on CIFAR-100](level2/Network-in-Network/) | Image | Pass either Level 2 challenge |
 | 3 | [Scaled AlexNet on Tiny ImageNet](level3/Scaled-AlexNet/) | Image | Final level |
-| 3 | [Small LSTM on Penn Treebank](level3/PTB-LSTM/) | Language | Final level |
+| 3 | [Full BERT Mini fine-tuning on SST-2](level3/BERT-Mini-SST2/) | Language | Final level |
 
 A challenge is passed only when the private evaluator reports that its pass reference has been met. Published paper metrics are historical context; paper reproduction, pass, and strong-reference rows on the site are produced by the same private evaluation protocol.
 

@@ -54,13 +54,13 @@ window.SUMMERML_CHALLENGES = [
     submit: `import torch\n\ntorch.save({\n    "model_state_dict": model.state_dict(),\n    "config": {"challenge_id": "alexnet-tiny-imagenet", "architecture": "scaled-alexnet"},\n}, "submission.pt")\n\n# Terminal:\n# python submit.py --challenge alexnet-tiny-imagenet --name "your-name"`,
   },
   {
-    id: "lstm-ptb", level: 3, number: "07", short: "PTB LSTM", type: "Word language model · Penn Treebank", metric: "perplexity",
-    paper: { title: "Recurrent Neural Network Regularization", authors: "Wojciech Zaremba, Ilya Sutskever, Oriol Vinyals", year: "2014", url: "https://arxiv.org/abs/1409.2329" },
-    task: "Recreate the paper’s small word-level model: a fixed 10,000-word vocabulary, 200-dimensional embedding, two 200-unit LSTM layers, and truncated backpropagation through 20 tokens. Lower perplexity is better; the paper reports 114.5 test perplexity.",
-    allowed: ["A learned Embedding, two unidirectional LSTM layers, and Linear vocabulary projection", "Fixed 10,000-token training vocabulary with <unk> and sentence <eos>", "20-token truncated BPTT while carrying detached hidden state between batches", "Paper SGD schedule or modern optimizers and non-recurrent dropout"],
-    forbidden: ["Transformers, attention, convolution, pretrained embeddings, or pretrained language models", "Bidirectional recurrence, access to future target tokens, or vocabulary expansion", "Training on validation/test text", "Changing the supplied tokenization or tying weights unless an evaluator config permits it"],
-    dataset: `from collections import Counter\nimport requests, torch\nfrom torch.utils.data import Dataset\n\nBASE = "https://raw.githubusercontent.com/wojzaremba/lstm/master/data"\ndef words(split):\n    text = requests.get(f"{BASE}/ptb.{split}.txt", timeout=30).text\n    return text.replace("\\n", " <eos> ").split()\n\ntrain_words = words("train")\nvocab = [w for w, _ in sorted(Counter(train_words).items(), key=lambda item: (-item[1], item[0]))[:10000]]\nstoi = {w: i for i, w in enumerate(vocab)}\n\nclass PTBSequences(Dataset):\n    def __init__(self, split="train", length=20):\n        self.ids = torch.tensor([stoi.get(w, stoi["<unk>"]) for w in words(split)])\n        self.length = length\n    def __len__(self): return (len(self.ids) - 1) // self.length\n    def __getitem__(self, i):\n        j = i * self.length\n        return self.ids[j:j+20], self.ids[j+1:j+21]\n\ntrain_set = PTBSequences()`,
-    submit: `import torch\n\ntorch.save({\n    "model_state_dict": model.state_dict(),\n    "config": {"challenge_id": "lstm-ptb", "architecture": "zaremba-small"},\n}, "submission.pt")\n\n# Terminal:\n# python submit.py --challenge lstm-ptb --name "your-name"`,
+    id: "bert-mini-sst2", level: 3, number: "07", short: "Full BERT Mini", type: "Sentiment classification · SST-2", metric: "accuracy",
+    paper: { title: "Well-Read Students Learn Better: On the Importance of Pre-training Compact Models", authors: "Iulia Turc, Ming-Wei Chang, Kenton Lee, Kristina Toutanova", year: "2019", url: "https://arxiv.org/abs/1908.08962" },
+    task: "Start from Google’s public four-layer BERT Mini checkpoint, attach its two-class sequence-classification head, and fine-tune every parameter on SST-2. This is full-weight transfer learning with a roughly 11M-parameter model; advancement uses the private evaluator.",
+    allowed: ["The google/bert_uncased_L-4_H-256_A-4 pretrained checkpoint and matching tokenizer", "A freshly initialized BertForSequenceClassification head with two output classes", "Full-model backpropagation through all four Transformer layers", "Cross-entropy, AdamW, learning-rate schedules, gradient clipping, and up to 128 tokens"],
+    forbidden: ["Any checkpoint already fine-tuned on SST-2 or another sentiment dataset", "LoRA, adapters, prompt tuning, quantization, or a frozen/partly frozen backbone", "Any other pretrained model, tokenizer, architecture, or additional trainable layers", "Training on validation labels, evaluator outputs, or external sentiment datasets"],
+    dataset: `from datasets import load_dataset\nfrom torch.utils.data import Dataset\nfrom transformers import AutoTokenizer\n\nclass SST2FineTuning(Dataset):\n    def __init__(self, split="train"):\n        self.rows = load_dataset("nyu-mll/glue", "sst2", split=split)\n        self.tokenizer = AutoTokenizer.from_pretrained(\n            "google/bert_uncased_L-4_H-256_A-4"\n        )\n    def __len__(self): return len(self.rows)\n    def __getitem__(self, i):\n        row = self.rows[i]\n        tokens = self.tokenizer(\n            row["sentence"], truncation=True, padding="max_length",\n            max_length=128, return_tensors="pt",\n        )\n        inputs = {name: value.squeeze(0) for name, value in tokens.items()}\n        return inputs, row["label"]\n\ntrain_set = SST2FineTuning("train")`,
+    submit: `import torch\n\ntorch.save({\n    "model_state_dict": model.state_dict(),\n    "config": {\n        "challenge_id": "bert-mini-sst2",\n        "architecture": "bert-mini-uncased",\n    },\n}, "submission.pt")\n\n# Terminal:\n# python submit.py --challenge bert-mini-sst2 --name "your-name"`,
   },
 ];
 
@@ -71,6 +71,6 @@ window.SUMMERML_UI = {
   "lstm-sequential-mnist": {path: "level2/Sequential-MNIST/", color: "#71495d", soft: "#f6f2f4"},
   "nin-cifar100": {path: "level2/Network-in-Network/", color: "#3f6457", soft: "#f1f5f3"},
   "alexnet-tiny-imagenet": {path: "level3/Scaled-AlexNet/", color: "#754848", soft: "#f6f2f2"},
-  "lstm-ptb": {path: "level3/PTB-LSTM/", color: "#4c5578", soft: "#f1f2f6"},
+  "bert-mini-sst2": {path: "level3/BERT-Mini-SST2/", color: "#4c5578", soft: "#f1f2f6"},
 };
 

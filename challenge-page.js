@@ -20,7 +20,6 @@ function escapeHtml(value) {
 
 function formatScore(value) {
   if (value === null || value === undefined) return "Pending";
-  if (challenge.metric === "perplexity") return Number(value).toFixed(2);
   if (challenge.metric === "roc_auc") return Number(value).toFixed(4);
   return `${(Number(value) * 100).toFixed(2)}%`;
 }
@@ -99,7 +98,7 @@ function render() {
 
     <section class="references"><div class="section-title"><div><p class="eyebrow">Targets</p><h2>Three reference points</h2></div><p>Every reference is evaluated on the same hidden protocol as student submissions.</p></div><div class="reference-list">${referenceHtml()}</div></section>
 
-    <section class="leaderboard"><div class="section-title"><div><p class="eyebrow">Live standings</p><h2>${escapeHtml(challenge.short)} leaderboard</h2></div><span class="metric-pill">${challenge.metric === "perplexity" ? "Lower is better" : "Higher is better"}</span></div>${leaderboardHtml()}</section>
+    <section class="leaderboard"><div class="section-title"><div><p class="eyebrow">Live standings</p><h2>${escapeHtml(challenge.short)} leaderboard</h2></div><span class="metric-pill">Higher is better</span></div>${leaderboardHtml()}</section>
 
     <nav class="challenge-navigation" aria-label="Challenge navigation">${navigationHtml()}</nav>`;
 
