@@ -84,7 +84,11 @@ async function loadState() {
 }
 
 document.getElementById("load-progress").addEventListener("click", () => {
-  state.student = nameEl.value.trim();
+  const name = nameEl.value.trim();
+  nameEl.setCustomValidity(name ? "" : "Enter a leaderboard name.");
+  if (!nameEl.reportValidity()) return;
+  state.student = name;
+  nameEl.value = name;
   localStorage.setItem("summerml-name", state.student);
   loadState();
 });

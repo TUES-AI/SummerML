@@ -4,7 +4,7 @@ const challengeId = document.body.dataset.challenge;
 const root = document.body.dataset.root || "../../";
 const challenge = CHALLENGES.find(item => item.id === challengeId);
 const ui = UI[challengeId];
-const student = localStorage.getItem("summerml-name") || "";
+let student = localStorage.getItem("summerml-name") || "";
 let payload = null;
 let online = false;
 
@@ -42,7 +42,7 @@ function referenceHtml() {
 }
 
 function runHtml(run, index) {
-  return `<div class="run-row"><span>Run ${index + 1}</span><strong>${formatScore(run.value)}</strong></div>`;
+  return `<div class="run-row"><span>Attempt ${run.run_rank || index + 1}</span><strong>${formatScore(run.value)}</strong></div>`;
 }
 
 function leaderboardHtml() {
@@ -51,7 +51,7 @@ function leaderboardHtml() {
   return `<div class="scoreboard">${rows.slice(0, 20).map((row, index) => {
     const rank = row.rank || index + 1;
     const rankClass = rank <= 3 ? ` rank-${rank}` : "";
-    const runs = row.runs?.length ? `<details class="run-history"><summary>${row.run_count} runs</summary>${row.runs.map(runHtml).join("")}</details>` : `<span class="single-run">1 run</span>`;
+    const runs = row.runs?.length ? `<details class="run-history"><summary>${row.run_count} attempts</summary>${row.runs.map(runHtml).join("")}</details>` : `<span class="single-run">1 attempt</span>`;
     return `<article class="score-row${rankClass}">
       <span class="rank-badge">${rank <= 3 ? ["🥇","🥈","🥉"][rank - 1] : `#${rank}`}</span>
       <strong class="student-name">${escapeHtml(row.name)}</strong>
@@ -79,12 +79,16 @@ function render() {
       <p class="eyebrow">Level ${challenge.level} · Recreate the paper</p>
       <h1>${escapeHtml(challenge.short)}</h1>
       <p class="challenge-intro">${escapeHtml(challenge.task)}</p>
+      <div class="challenge-contract" aria-label="Model interface"><span><small>Input</small>${escapeHtml(challenge.contract.input)}</span><span><small>Output</small>${escapeHtml(challenge.contract.output)}</span><span><small>Train with</small>${escapeHtml(challenge.contract.objective)}</span></div>
+      <form class="challenge-identity"><label for="challenge-student-name">Leaderboard name</label><input id="challenge-student-name" name="student-name" value="${escapeHtml(student)}" maxlength="40" pattern="[A-Za-z0-9_. \-]{1,40}" placeholder="your-name" autocomplete="nickname" required><button type="submit">Use name</button><small>Required for progress and submissions. Repeated attempts stack under this exact name.</small></form>
     </section>
 
     <section class="paper-spotlight colorful-paper">
       <div><span class="paper-label">The paper · ${challenge.paper.year}</span><h2 class="paper-title">${escapeHtml(challenge.paper.title)}</h2><p class="paper-authors">${escapeHtml(challenge.paper.authors)}</p></div>
       <a class="paper-button" href="${challenge.paper.url}" target="_blank" rel="noreferrer">Open paper ↗</a>
     </section>
+
+    <section class="build-path"><div class="path-heading"><p class="eyebrow">Build path</p><h2>From paper to checkpoint</h2></div><ol>${challenge.milestones.map((item, index) => `<li><span>0${index + 1}</span><p>${escapeHtml(item)}</p></li>`).join("")}</ol></section>
 
     <section class="rules-layout">
       <div class="rule-panel allowed-panel"><h2>Build with</h2><ul>${challenge.allowed.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul></div>
@@ -102,6 +106,17 @@ function render() {
 
     <nav class="challenge-navigation" aria-label="Challenge navigation">${navigationHtml()}</nav>`;
 
+  document.querySelector(".challenge-identity").addEventListener("submit", event => {
+    event.preventDefault();
+    const input = document.getElementById("challenge-student-name");
+    const name = input.value.trim();
+    input.setCustomValidity(name ? "" : "Enter a leaderboard name.");
+    if (!input.reportValidity()) return;
+    student = name;
+    input.value = name;
+    localStorage.setItem("summerml-name", student);
+    loadState();
+  });
   document.querySelectorAll(".copy-button").forEach(button => button.addEventListener("click", async () => {
     await navigator.clipboard.writeText(button.nextElementSibling.textContent);
     button.textContent = "Copied!";

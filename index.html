@@ -36,10 +36,10 @@
       <div class="identity" id="progress">
         <label for="student-name">Leaderboard name</label>
         <div class="identity-row">
-          <input id="student-name" maxlength="40" placeholder="your-name" autocomplete="nickname">
+          <input id="student-name" maxlength="40" pattern="[A-Za-z0-9_. \-]{1,40}" placeholder="your-name" autocomplete="nickname" required>
           <button id="load-progress" type="button">Load progress</button>
         </div>
-        <p class="hint">Use the exact same name when submitting.</p>
+        <p class="hint">Required for progress and submissions. Repeated attempts stack under this exact name.</p>
       </div>
     </section>
 
